@@ -2,6 +2,8 @@ import React,{Component} from "react";
 import NewsItem from "./NewsItem";
 import Spinner from "./Spinner";
 
+
+
 export class News extends Component{
     
     constructor(){
@@ -19,14 +21,16 @@ export class News extends Component{
     }
 
     async componentDidUpdate(prevProps) {
-        if (prevProps.category !== this.props.category) {
+        if (prevProps.category !== this.props.category||prevProps.searchInput !== this.props.searchInput) {
           this.setState({ page: 1 }, this.fetchNews); 
         }
     }
 
     fetchNews= async()=>{
         console.log(this.state.page)
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=9feb8626a4474e9b9a6c8989aad09664&page=${this.state.page}&pageSize=${this.props.pageSize}`
+        let url = this.props.searchInput
+        ?`https://newsapi.org/v2/top-headlines?q=${this.props.searchInput}&apiKey=9feb8626a4474e9b9a6c8989aad09664&page=${this.state.page}&pageSize=${this.props.pageSize}`
+        :`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=9feb8626a4474e9b9a6c8989aad09664&page=${this.state.page}&pageSize=${this.props.pageSize}`
         this.setState({loading:true})
         let data = await fetch(url);
         let parsedData = await data.json();
@@ -54,12 +58,12 @@ export class News extends Component{
     render (){
         return(
             <>
-                <h2 className="my-2 text-center">Top headline</h2>
+                <h2 className={`my-2 text-center ${this.props.darkMode?"text-white" : "text-dark"}`}>Top  {this.props.searchInput?this.props.searchInput:this.props.category} headline</h2>
                 {this.state.loading && <Spinner/>}
                 <div className="row mt-2 g-4">
                     {!this.state.loading && this.state.articles.map((item)=>{
                         return <div key={item.url} className="col-lg-3">
-                                    <NewsItem title={item.title} decription={item.description} imageUrl ={item.urlToImage} newsUrl = {item.url} date = {item.publishedAt} author={item.author} source={item.source.name}/>
+                                    <NewsItem title={item.title} decription={item.description} imageUrl ={item.urlToImage} newsUrl = {item.url} date = {item.publishedAt} author={item.author} source={item.source.name} darkMode = {this.props.darkMode}/>
                                 </div>
                     })}
                 </div>

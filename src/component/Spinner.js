@@ -4,6 +4,23 @@ export class Spinner extends Component{
     render(){
         return (
             <>
+
+
+
+
+
+            {/* app.js me comment dekh sala jaldi se😉 */}
+
+
+
+
+
+
+
+
+
+
+
                 <div className="text-center">
                     <img src={loading} alt="loading" width={50}/>
                 </div>
